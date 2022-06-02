@@ -1,110 +1,57 @@
-
-
-key = input("Enter key")
-key = key.replace(" ", "")
-key = key.upper()
-
-
-def matrix(x, y, initial):
-    return [[initial for i in range(x)] for j in range(y)]
-
-
-result = list()
-for c in key:
-    if c not in result:
-        if c == 'J':
-            result.append('I')
+key = input("Enter the key to generate table")
+table = ""
+for i in range(0, len(key)):
+    if key[i] == "j":
+        key[i] = "i"
+    if key[i] not in table:
+        table += key[i]
+for x in range(ord("a"), ord("z") + 1):
+    if chr(x) not in table:
+        if chr(x) == "j":
+            if "i" not in table:
+                table += "i"
         else:
-            result.append(c)
-flag = 0
-for i in range(65, 91):
-    if chr(i) not in result:
-        if i == 73 and chr(74) not in result:
-            result.append("I")
-            flag = 1
-        elif flag == 0 and i == 73 or i == 74:
-            pass
-        else:
-            result.append(chr(i))
+            table += chr(x)
+print(table)
+
+x = input("Enter the plaintext: ")
+if len(x) % 2 != 0:
+    x += "x"
+n = len(x)
+cipher = ""
 k = 0
-my_matrix = matrix(5, 5, 0)
-for i in range(0, 5):
-    for j in range(0, 5):
-        my_matrix[i][j] = result[k]
-        k += 1
-
-
-def locindex(c):
-    loc = list()
-    if c == 'J':
-        c = 'I'
-    for i, j in enumerate(my_matrix):
-        for k, l in enumerate(j):
-            if c == l:
-                loc.append(i)
-                loc.append(k)
-                return loc
-
-
-def encrypt():
-    msg = str(input("ENTER MSG:"))
-    msg = msg.upper()
-    msg = msg.replace(" ", "")
-    i = 0
-    for s in range(0, len(msg)+1, 2):
-        if s < len(msg)-1:
-            if msg[s] == msg[s+1]:
-                msg = msg[:s+1]+'X'+msg[s+1:]
-    if len(msg) % 2 != 0:
-        msg = msg[:]+'X'
-    print("CIPHER TEXT:", end=' ')
-    while i < len(msg):
-        loc = list()
-        loc = locindex(msg[i])
-        loc1 = list()
-        loc1 = locindex(msg[i+1])
-        if loc[1] == loc1[1]:
-            print("{}{}".format(
-                my_matrix[(loc[0]+1) % 5][loc[1]], my_matrix[(loc1[0]+1) % 5][loc1[1]]), end=' ')
-        elif loc[0] == loc1[0]:
-            print("{}{}".format(my_matrix[loc[0]][(
-                loc[1]+1) % 5], my_matrix[loc1[0]][(loc1[1]+1) % 5]), end=' ')
-        else:
-            print("{}{}".format(
-                my_matrix[loc[0]][loc1[1]], my_matrix[loc1[0]][loc[1]]), end=' ')
-        i = i+2
-
-
-def decrypt():
-    msg = str(input("ENTER CIPHER TEXT:"))
-    msg = msg.upper()
-    msg = msg.replace(" ", "")
-    print("PLAIN TEXT:", end=' ')
-    i = 0
-    while i < len(msg):
-        loc = list()
-        loc = locindex(msg[i])
-        loc1 = list()
-        loc1 = locindex(msg[i+1])
-        if loc[1] == loc1[1]:
-            print("{}{}".format(
-                my_matrix[(loc[0]-1) % 5][loc[1]], my_matrix[(loc1[0]-1) % 5][loc1[1]]), end=' ')
-        elif loc[0] == loc1[0]:
-            print("{}{}".format(my_matrix[loc[0]][(
-                loc[1]-1) % 5], my_matrix[loc1[0]][(loc1[1]-1) % 5]), end=' ')
-        else:
-            print("{}{}".format(
-                my_matrix[loc[0]][loc1[1]], my_matrix[loc1[0]][loc[1]]), end=' ')
-        i = i+2
-
-
-while(1):
-    choice = int(input("\n 1.Encryption \n 2.Decryption: \n 3.EXIT"))
-    if choice == 1:
-        encrypt()
-    elif choice == 2:
-        decrypt()
-    elif choice == 3:
-        exit()
+for i in range(0, n, 2):
+    a = x[i]
+    b = x[i + 1]
+    if a == "j":
+        a = "i"
+    if b == "j":
+        b = "i"
+    c = (int(table.index(a) / 5), table.index(a) % 5)
+    d = (int(table.index(b) / 5), table.index(b) % 5)
+    if c[0] == d[0]:
+        cipher += table[c[0] * 5 + (c[1] + 1) % 5]
+        cipher += table[d[0] * 5 + (d[1] + 1) % 5]
+    elif c[1] == d[1]:
+        cipher += table[((c[0] + 1) % 5) * 5 + c[1]]
+        cipher += table[((d[0] + 1) % 5) * 5 + d[1]]
     else:
-        print("Choose correct choice")
+        cipher += table[c[0] * 5 + d[1]]
+        cipher += table[d[0] * 5 + c[1]]
+print(cipher)
+decipher = ""
+for i in range(0, n, 2):
+    a = cipher[i]
+    b = cipher[i + 1]
+    c = (int(table.index(a) / 5), table.index(a) % 5)
+    d = (int(table.index(b) / 5), table.index(b) % 5)
+    if c[0] == d[0]:
+        decipher += table[c[0] * 5 + (c[1] - 1) % 5]
+        decipher += table[d[0] * 5 + (d[1] - 1) % 5]
+    elif c[1] == d[1]:
+        decipher += table[((c[0] - 1) % 5) * 5 + c[1]]
+        decipher += table[((d[0] - 1) % 5) * 5 + d[1]]
+    else:
+        decipher += table[c[0] * 5 + d[1]]
+        decipher += table[d[0] * 5 + c[1]]
+print(decipher)
