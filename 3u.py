@@ -1,66 +1,52 @@
 import numpy as np
-import sympy
-import string
-import random
+pt = input("Enter the plain text ")
+key = input("Enter the key ")
+pt = pt.lower()
+key = key.lower()
+key = np.array([(ord(b)-97) for b in key]) #converting alphabets to ascii values
 
-dimension = 3 # Your N
-key = np.matrix([[17,17,5], [21,18,21], [2,2,19]]) # Your key
-message = 'paymoremoney' # Your message
+if(len(key)==4):
+    size = 2
+    keym = key.reshape(2,2)
+if(len(key)==9):
+    size = 3
+    keym = key.reshape(3,3)
+    
+while(len(pt)%size!=0):
+    pt.append("x")
 
-print("Plain Text: "+message)
-print("Key Matrix: ")
-print(key)
+pt = np.array([(ord(a)-97) for a in pt])
 
-alphabet = string.ascii_lowercase
-encryptedMessage = ""
+#splits the array into equal parts
+ptm = np.array_split(pt,len(pt)/size)
+print("Encrypted text is")
+enc = []
+for a in ptm:
+    a = a.reshape(size,1)
+    encr = np.dot(keym,a)%26
+    for a in np.nditer(encr):
+        enc.append(a)
+        print(chr(a+97),end=" ")
+print()    
+print("decrypted text is")
+adj = np.linalg.inv(keym)
+det = round(np.linalg.det(keym))
+adj = adj*det  # inverse*det = adjacent matrix
 
-for index, i in enumerate(message): #PAYMOREMONEY 
-    values = []
-    if index % dimension == 0:
-        for j in range(0, dimension):
-            if(index + j < len(message)):
-                values.append([alphabet.index(message[index + j])])
-            else:
-                values.append([random.randint(0,25)])
-        vector = np.matrix(values)
-        vector = key * vector
-        vector %= 26
-        for j in range(0, dimension):
-            encryptedMessage += alphabet[vector.item(j)]
+np.where(adj<0,adj+26,adj)
 
-print("Encrypted message is: "+ encryptedMessage.upper())
+x = 1
+while((det*x)%26!=1):
+    x+=1
 
-def modulo_multiplicative_inverse(A, M):
-    for i in range(0, M):
-        if (A*i) % M == 1:
-            return i
-    return -1
 
-matrix= sympy.Matrix([[17,17,5], [21,18,21], [2,2,19]])
-adj=(matrix.adjugate()%26) #TO FIND ADJOINT OF KEY MATRIX
-
-mat=np.matrix([[17,17,5], [21,18,21], [2,2,19]])
-det=(round(np.linalg.det(mat))%26) #TO FIND DETERMINENT
-mult_inverse=modulo_multiplicative_inverse(det, 26)
-
-inv_m=(mult_inverse*adj)%26
-print("inverse of Key Matrix: ")
-print(inv_m)
-
-decryptedMessage=""
-
-for index, i in enumerate(encryptedMessage): 
-    values = []
-    if index % dimension == 0:
-        for j in range(0, dimension):
-            if(index + j < len(encryptedMessage)):
-                values.append([alphabet.index(encryptedMessage[index + j])])
-            else:
-                values.append([random.randint(0,25)])
-        vector = np.matrix(values)
-        vector = inv_m * vector
-        vector %= 26
-        for j in range(0, dimension):
-            decryptedMessage += alphabet[vector[j]]
-
-print("Decrypted Message: "+ decryptedMessage)
+final = (x*adj)%26 #final is the inverse matrix of the key
+enc = np.array(enc) #enc is the ciphertext
+encm = np.array_split(enc,len(enc)/size) #spliting it into equal sizes
+for a in encm:
+    a = a.reshape(size,1)
+    decr = np.round_(np.dot(final,a))
+    decr = decr.astype(int)
+    decr = decr%26
+    for a in np.nditer(decr):
+        print(chr(a+97),end=" ")
