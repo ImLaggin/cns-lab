@@ -46,7 +46,6 @@ ans = ""
 for k in keyMat:
     print(k)
 
-
 def playFair(c1, c2):
     if(row[c1] == row[c2]):
         t1, t2 = col[c1], col[c2]
@@ -66,7 +65,6 @@ def playFair2(c1, c2):
         return keyMat[(t1-1) % 5][col[c1]]+keyMat[(t2-1) % 5][col[c2]]
     else:
         return keyMat[row[c1]][col[c2]]+keyMat[row[c2]][col[c1]]
-
 
 i = 0
 while(i < len(plainText)):
