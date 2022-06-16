@@ -1,5 +1,5 @@
-plainText = input("ENTER THE PLAINTEXT ").upper()
-key = input("ENTER THE KEY ").upper()
+plainText = input("ENTER THE PLAINTEXT ").upper().replace(' ','')
+key = input("ENTER THE KEY ").upper().replace(' ','')
 cipherText = []
 decryptedText = []
 
