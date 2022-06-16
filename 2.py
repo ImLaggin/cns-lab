@@ -1,5 +1,5 @@
-plainText = input("ENTER THE PLAIN TEXT ").upper().replace('J', "I")
-key = input("ENTER THE KEY ").upper().replace('J', 'I')
+plainText = input("ENTER THE PLAIN TEXT ").upper().replace('J', "I").replace(' ','')
+key = input("ENTER THE KEY ").upper().replace('J', 'I').replace(' ','')
 
 alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 visited = {i: 0 for i in alphabets}
