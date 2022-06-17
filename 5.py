@@ -1,5 +1,5 @@
 def encryptRailFence(text, key):
-	rail = [['\n' for i in range(len(text))] for j in range(key)]
+	rail = [[' ' for i in range(len(text))] for j in range(key)]
 	
 	dir_down = False
 	row, col = 0, 0
@@ -19,8 +19,14 @@ def encryptRailFence(text, key):
 	result = []
 	for i in range(key):
 		for j in range(len(text)):
-			if rail[i][j] != '\n':
+			if rail[i][j] != ' ':
 				result.append(rail[i][j])
+				
+	for i in range(key):
+	    for j in range(len(text)):
+	        print(rail[i][j], end=" ")
+	    print("\n")
+			
 	return("" . join(result))
 	
 def decryptRailFence(cipher, key):
@@ -72,4 +78,4 @@ def decryptRailFence(cipher, key):
 	return("".join(result))
 
 print(encryptRailFence("defendtheeastwall", 3))
-print(decryptRailFence("dnhaweedteesalftl", 3))
+print(decryptRailFence("dnetleedheswlftaa", 3))
