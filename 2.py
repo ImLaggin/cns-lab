@@ -1,7 +1,6 @@
 import string
 
-inputString = input("Enter the input string: ").upper().replace(
-    'J', 'I').replace(' ', '')
+inputString = input("Enter the input string: ").upper().replace('J', 'I').replace(' ', '')
 key = input("Enter the key: ").upper().replace('J', 'I').replace(' ', '')
 
 alphabets = string.ascii_uppercase
@@ -9,7 +8,6 @@ visited = {i: 0 for i in alphabets}
 rowIndex = {}
 columnIndex = {}
 keyMatrix = [['a', 'a', 'a', 'a', 'a'] for i in range(5)]
-
 
 def constructKeyMatrix():
     i, j = 0, 0
@@ -47,11 +45,9 @@ def constructKeyMatrix():
             i += 1
         visited[e] = 1
 
-
 constructKeyMatrix()
 for k in keyMatrix:
     print(k)
-
 
 def playFair(c1, c2, encrypt=True):
     if encrypt:
@@ -72,7 +68,6 @@ def playFair(c1, c2, encrypt=True):
             return keyMatrix[(t1-1) % 5][columnIndex[c1]]+keyMatrix[(t2-1) % 5][columnIndex[c2]]
         else:
             return keyMatrix[rowIndex[c1]][columnIndex[c2]]+keyMatrix[rowIndex[c2]][columnIndex[c1]]
-
 
 def driver(choice=1):
     resultString = ""
@@ -97,7 +92,6 @@ def driver(choice=1):
             i += 1
 
     print("Resultant string is:", resultString)
-
 
 choice = int(input("1. Encrypt\n2. Decrypt\n"))
 driver(choice)
